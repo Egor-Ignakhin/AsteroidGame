@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Asteroid;
+
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -14,20 +14,30 @@ namespace Assets.Scripts
 
         protected int objectsCount;
 
+        public int InUsing()
+        {
+            return objectsCount - reusableInstances.Count;
+        }
+
         public ObjectPool(Transform objectsParent, int objectsCount)
         {
             this.objectsParent = objectsParent;
-            this.objectsCount = objectsCount;
 
             SetPrefabAsset();
 
             for (int i = 0; i < objectsCount; i++)
             {
-                T objectInstance = Object.Instantiate(prefabAsset, objectsParent);
-                objectInstance.Realized += (t) => { ReturnToPool((T)t); };
-                objectInstance.gameObject.SetActive(false);
-                reusableInstances.Push(objectInstance);
+                CreateInstance();
             }
+        }
+
+        private void CreateInstance()
+        {
+            T objectInstance = Object.Instantiate(prefabAsset, objectsParent);
+            objectInstance.Realized += (t) => { ReturnToPool((T)t); };
+            objectInstance.gameObject.SetActive(false);
+            reusableInstances.Push(objectInstance);
+            objectsCount++;
         }
 
         protected abstract void SetPrefabAsset();
@@ -41,14 +51,13 @@ namespace Assets.Scripts
 
         public T GetObjectFromPool()
         {
-            T retComp;
-            if (reusableInstances.Count > 0)
+            if (reusableInstances.Count == 0)
             {
-                retComp = reusableInstances.Pop();
-                retComp.gameObject.SetActive(true);
+                CreateInstance();
             }
-            else
-                retComp = Object.Instantiate(prefabAsset, objectsParent);
+
+            T retComp = reusableInstances.Pop();
+            retComp.gameObject.SetActive(true);
 
             return retComp;
         }
