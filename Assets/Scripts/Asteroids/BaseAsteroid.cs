@@ -1,5 +1,8 @@
+using Assets.Scripts.Asteroids.AsteroidMovement;
+using Assets.Scripts.Player;
+
 using System;
-using Assets.Scripts.Player.Ship;
+
 using UnityEngine;
 
 namespace Assets.Scripts.Asteroids
@@ -12,25 +15,53 @@ namespace Assets.Scripts.Asteroids
 
         private float speed;
         public const float MinSpeed = 1;
-        public  const float MaxSpeed = 5;
+        public const float MaxSpeed = 5;
 
         private Vector3 direction;
 
+        private PlayerInput playerInput;
+        private IAsteroidMovement currentAsteroidMovement;
+        private IAsteroidMovement mainAsteroidMovement;
+        private IAsteroidMovement pausedAsteroidMovement;
 
         public Vector3 Direction()
         {
             return direction;
         }
 
+        private void Awake()
+        {
+            mainAsteroidMovement = new MainAsteroidMovement(transform);
+            pausedAsteroidMovement = new PausedAsteroidMovement();
+        }
+
+        public void Setup(PlayerInput playerInput)
+        {
+            this.playerInput = playerInput;
+
+            playerInput.Paused += OnPaused;
+            OnPaused();
+        }
+
+        private void OnPaused()
+        {
+            currentAsteroidMovement = playerInput.IsPaused() ?
+                pausedAsteroidMovement : mainAsteroidMovement;
+        }
+
         public void Initialize(float speed, Vector3 direction)
         {
             this.speed = speed;
             this.direction = direction;
+
+
+            mainAsteroidMovement.Inititalize(direction, speed);
+            pausedAsteroidMovement.Inititalize(direction, speed);
         }
 
         private void FixedUpdate()
         {
-            transform.position += direction * speed;
+            currentAsteroidMovement.Move();
         }
 
         public void Hit(IBulletShooter _)
@@ -50,6 +81,11 @@ namespace Assets.Scripts.Asteroids
             Realized?.Invoke(this);
             FullDestroyed?.Invoke(this);
             BlastsManager.Blast(transform.position);
+        }
+
+        private void OnDestroy()
+        {
+            playerInput.Paused -= OnPaused;
         }
     }
 }

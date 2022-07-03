@@ -12,10 +12,11 @@ namespace Assets.Scripts.Player.Ship
         [SerializeField] private Transform bulletsParent;
         [SerializeField] private Transform bulletsInstantiatePlace;
         [SerializeField] private AudioSource audioSource;
+        [SerializeField] private  PlayerInput playerInput;
 
         private void Awake()
         {
-            bulletsPool = new BulletsPool(bulletsParent, 15);
+            bulletsPool = new BulletsPool(bulletsParent, 15, playerInput);
         }
 
         public void SetShipInput(IShipInput shipInput)

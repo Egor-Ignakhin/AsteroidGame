@@ -1,3 +1,5 @@
+using Assets.Scripts.Player;
+
 using System.Collections;
 
 using UnityEngine;
@@ -9,6 +11,7 @@ namespace Assets.Scripts.Asteroids
     public class AsteroidsController : MonoBehaviour
     {
         [SerializeField] private Transform asteroidsParent;
+        [SerializeField] private PlayerInput playerInput;
         private ObjectPool<BigAsteroid> bigAsteroidsPool;
         private ObjectPool<MediumAsteroid> mediumAsteroidsPool;
         private ObjectPool<SmallAsteroid> smallAsteroidsPool;
@@ -17,9 +20,9 @@ namespace Assets.Scripts.Asteroids
 
         private void Awake()
         {
-            bigAsteroidsPool = new BigAsteroidsPool(asteroidsParent, 15);
-            mediumAsteroidsPool = new MediumAsteroidsPool(asteroidsParent, 15);
-            smallAsteroidsPool = new SmallAsteroidsPool(asteroidsParent, 15);
+            bigAsteroidsPool = new BigAsteroidsPool(asteroidsParent, 15, playerInput);
+            mediumAsteroidsPool = new MediumAsteroidsPool(asteroidsParent, 15, playerInput);
+            smallAsteroidsPool = new SmallAsteroidsPool(asteroidsParent, 15, playerInput);
         }
 
         private void Start()

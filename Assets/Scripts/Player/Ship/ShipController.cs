@@ -1,4 +1,8 @@
+using Assets.Scripts.Player.Ship.Movement;
+using Assets.Scripts.Player.Ship.ShipStates;
+
 using System;
+using System.Collections;
 
 using UnityEngine;
 
@@ -6,54 +10,109 @@ namespace Assets.Scripts.Player.Ship
 {
     public class ShipController : MonoBehaviour, IDestroyable
     {
+        public event Action StateChanged;
         public event Action<IDestroyable> Destroyed;
         private IShipInput shipInput;
-        [SerializeField] private PlayerInput playerInput;
 
-        [SerializeField] private ShipMovement shipMovement;
+        [SerializeField] private AudioSource movementSource;
+        
+        private ShipMovement currentMovement;
+        private ShipMovement pausedMovement;
+        private ShipMovement mainMovement;
+        
         [SerializeField] private ShipCombat shipCombat;
         [SerializeField] private ShipCollider shipCollider;
 
+        private IShipState currentState;
+        private IShipInput lastInput;
+
         private void Awake()
         {
-            playerInput.Paused += OnPaused;
-            shipInput = new KeyboardShipInput();
-            shipMovement.SetShipInput(shipInput);
-            shipCombat.SetShipInput(shipInput);
+            mainMovement = new MainShipMovement(transform, movementSource);
+            pausedMovement = new PausedShipMovement(transform, movementSource);
+            SetInput(new KeyboardShipInput());
             shipCollider.DestroyableContacted += OnDestroyableContacted;
             shipCollider.BulletReceived += FullDestroy;
         }
 
-        private void OnPaused()
+        private void Start()
         {
-            throw new System.NotImplementedException();
+            SetState(new InvulnerabilityShipState());
         }
 
+        private void SetState(IShipState state)
+        {
+            currentState = state;
+
+            StateChanged?.Invoke();
+        }
 
         private void OnDestroyableContacted(IDestroyable obj)
         {
             obj.FullDestroy();
 
             FullDestroy();
+        }
 
-            BlastsManager.Blast(transform.position);
+        private IEnumerator ReBorning()
+        {
+            SetState(new InvulnerabilityShipState());
+
+            yield return new WaitForSeconds(3);
         }
 
         private void Update()
         {
-            shipInput.Update();
+            shipInput?.Update();
         }
 
-        private void OnDestroy()
+        private void LateUpdate()
         {
-            playerInput.Paused -= OnPaused;
-            shipCollider.DestroyableContacted -= OnDestroyableContacted;
-            shipCollider.BulletReceived -= FullDestroy;
+            currentMovement.LateUpdate();
         }
 
         public void FullDestroy()
         {
             Destroyed?.Invoke(this);
+
+            BlastsManager.Blast(transform.position);
+
+            StartCoroutine(nameof(ReBorning));
+        }
+
+        public IShipState GetState()
+        {
+            return currentState;
+        }
+
+        public void SetInput(IShipInput input)
+        {
+            lastInput = shipInput;
+
+            shipInput = input;
+
+            if (input is PausedShipInput)
+            {
+                currentMovement = pausedMovement;
+            }
+            else
+            {
+                currentMovement = mainMovement;
+            }
+
+            currentMovement.SetShipInput(shipInput);
+            shipCombat.SetShipInput(shipInput);
+        }
+
+        public IShipInput GetLastInput()
+        {
+            return lastInput;
+        }
+
+        private void OnDestroy()
+        {
+            shipCollider.DestroyableContacted -= OnDestroyableContacted;
+            shipCollider.BulletReceived -= FullDestroy;
         }
     }
 }

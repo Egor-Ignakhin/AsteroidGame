@@ -1,3 +1,5 @@
+using Assets.Scripts.Player;
+
 using System;
 using System.Collections;
 
@@ -15,13 +17,32 @@ namespace Assets.Scripts.UFO
         private ObjectPool<Bullet> ufoBulletsPool;
         private Transform playerShipTransform;
         [SerializeField] private UFOCollider ufoCollider;
+        private PlayerInput playerInput;
+        private Vector3 targetPosition;
 
-        public void Setup(Transform bulletsParent, Transform playerTransform)
+        private IUfoMovement currentUfoMovement;
+        private IUfoMovement mainUfoMovement;
+        private IUfoMovement pausedUfoMovement;
+
+        public void Setup(Transform bulletsParent, Transform playerTransform, PlayerInput playerInput)
         {
-            ufoBulletsPool = new UFOBulletsPool(bulletsParent, 10);
+            this.playerInput = playerInput;
+            ufoBulletsPool = new UFOBulletsPool(bulletsParent, 10, playerInput);
             this.playerShipTransform = playerTransform;
+
+            mainUfoMovement = new MainUfoMovement(transform);
+            pausedUfoMovement = new PausedUfoMovement();
+
+            this.playerInput.Paused += OnPaused;
+            OnPaused();
+
             ufoCollider.DestroyableContacted += OnDestroyableContacted;
             ufoCollider.bulletReceived += OnBulletReceived;
+        }
+
+        private void OnPaused()
+        {
+            currentUfoMovement = playerInput.IsPaused() ? pausedUfoMovement : mainUfoMovement;
         }
 
         private void OnDestroyableContacted(IDestroyable obj)
@@ -32,24 +53,29 @@ namespace Assets.Scripts.UFO
         private void OnBulletReceived(IBulletShooter shooter)
         {
             FullDestroy();
-
         }
 
-        public void Initialize(Vector3 positon, Vector3 target)
+        public void Initialize(Vector3 position, Vector3 target)
         {
             StartCoroutine(nameof(Shooting));
-            StartCoroutine(Realizing(positon, target));
+            transform.position = position;
+            targetPosition = target;
+            mainUfoMovement.Initialize(position, target);
         }
 
-        private IEnumerator Realizing(Vector3 positon, Vector3 target)
+        private void Update()
         {
-            float targetTime = 10f;
+            currentUfoMovement.Move();
 
-            yield return StartCoroutine(targetTime.Tweeng((p) => transform.position = p,
-                positon,
-                target));
+            TakeStatistics();
+        }
 
-            Realized?.Invoke();
+        private void TakeStatistics()
+        {
+            if (transform.position == targetPosition)
+            {
+                Realized?.Invoke();
+            }
         }
 
         private IEnumerator Shooting()

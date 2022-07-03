@@ -11,6 +11,7 @@ namespace Assets.Scripts.Player
 
         [SerializeField] private GameObject shipDestroyableGM;
         private  IDestroyable shipDestroyable;
+
         private int health = 5;
 
         public int GetHealth()

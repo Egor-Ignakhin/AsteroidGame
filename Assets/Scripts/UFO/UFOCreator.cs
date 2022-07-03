@@ -1,3 +1,5 @@
+using Assets.Scripts.Player;
+
 using System.Collections;
 
 using UnityEngine;
@@ -8,12 +10,13 @@ namespace Assets.Scripts.UFO
     {
         private UFOController ufoController;
         [SerializeField] private Transform playerShipTransform;
+        [SerializeField] private PlayerInput playerInput;
 
         private void Awake()
         {
             ufoController = Instantiate(Resources.Load<UFOController>("UFO"), transform);
             ufoController.gameObject.SetActive(false);
-            ufoController.Setup(transform, playerShipTransform);
+            ufoController.Setup(transform, playerShipTransform, playerInput);
         }
 
         private void Start()

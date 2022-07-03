@@ -1,10 +1,12 @@
+using Assets.Scripts.Player;
 using UnityEngine;
 
 namespace Assets.Scripts.Asteroids
 {
-    public class MediumAsteroidsPool : ObjectPool<MediumAsteroid>
+    public class MediumAsteroidsPool : AsteroidsPool<MediumAsteroid>
     {
-        public MediumAsteroidsPool(Transform objectsParent, int objectsCount) : base(objectsParent, objectsCount)
+        public MediumAsteroidsPool(Transform objectsParent,
+            int objectsCount, PlayerInput playerInput) : base(objectsParent, objectsCount, playerInput)
         {
         }
 

@@ -1,10 +1,12 @@
+using Assets.Scripts.Player;
 using UnityEngine;
 
 namespace Assets.Scripts.UFO
 {
-    public class UFOBulletsPool : ObjectPool<Bullet>
+    public class UFOBulletsPool : BulletsPool
     {
-        public UFOBulletsPool(Transform objectsParent, int objectsCount) : base(objectsParent, objectsCount)
+        public UFOBulletsPool(Transform objectsParent, 
+            int objectsCount, PlayerInput playerInput) : base(objectsParent, objectsCount, playerInput)
         {
         }
 
