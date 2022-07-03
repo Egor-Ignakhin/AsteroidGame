@@ -5,6 +5,7 @@ namespace Assets.Scripts.Player.Ship
 {
     public class KeyboardShipInput : IShipInput
     {
+        private float timeFromLastShot;
         public event Action AccelerationKeysPressed;
         public event Action RotationKeysPressed;
         public event Action ShootKeyDown;
@@ -34,8 +35,14 @@ namespace Assets.Scripts.Player.Ship
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                ShootKeyDown?.Invoke();
+                if (timeFromLastShot > 1f / 3)
+                {
+                    ShootKeyDown?.Invoke();
+                    timeFromLastShot = 0;
+                }
             }
+
+            timeFromLastShot += Time.deltaTime;
         }
 
         private float CalcVerAxis()

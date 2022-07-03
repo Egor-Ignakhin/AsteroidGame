@@ -23,15 +23,34 @@ namespace Assets.Scripts.UFO
 
         private IEnumerator CreateUFO()
         {
-           // yield return new WaitForSeconds(Random.Range(20, 40));
-            yield return null;
+            yield return new WaitForSeconds(Random.Range(20, 40));
 
             ufoController.gameObject.SetActive(true);
-            (float x, float xTarget) = Random.Range(-1f, 1f) > 0 ? (Screen.width, 0) : (0, Screen.width);
-            float y = Random.Range(0, Screen.height);
-            ufoController.Initialize(new Vector3(x, y, 0), new Vector3(xTarget, y));
+            (Vector3 position, Vector3 target) = CalcPosAndTarget();
+
+            ufoController.Initialize(position, target);
 
             ufoController.Realized += OnUFORealized;
+        }
+
+        private (Vector3, Vector3) CalcPosAndTarget()
+        {
+            (float xStart, float xTarget) = (0, 0);
+
+            if (Random.Range(-1f, 1f) > 0)
+            {
+                (xStart, xTarget) = (Screen.width, 0);
+            }
+            else
+            {
+                (xStart, xTarget) = (0, Screen.width);
+            }
+
+            float minY = Screen.height / 10 * 2;
+            float MaxY = Screen.height / 10 * 8;
+            float y = Random.Range(minY, MaxY);
+
+            return (new Vector3(xStart, y, 0), new Vector3(xTarget, y));
         }
 
         private void OnUFORealized()

@@ -1,12 +1,13 @@
 using System;
-
+using Assets.Scripts.Player.Ship;
 using UnityEngine;
 
 namespace Assets.Scripts.Asteroids
 {
-    public abstract class BaseAsteroid : MonoBehaviour, IBulletReceiver, IPoolable
+    public abstract class BaseAsteroid : MonoBehaviour, IBulletReceiver, IPoolable, IDestroyable
     {
-        public event Action<BaseAsteroid> Destroyed;
+        public event Action<IDestroyable> Destroyed;
+        public event Action<BaseAsteroid> FullDestroyed;
         public event Action<IPoolable> Realized;
 
         private float speed;
@@ -14,6 +15,7 @@ namespace Assets.Scripts.Asteroids
         public  const float MaxSpeed = 5;
 
         private Vector3 direction;
+
 
         public Vector3 Direction()
         {
@@ -31,10 +33,23 @@ namespace Assets.Scripts.Asteroids
             transform.position += direction * speed;
         }
 
-        public void Hit()
+        public void Hit(IBulletShooter _)
+        {
+            Destroy();
+        }
+
+        private void Destroy()
         {
             Realized?.Invoke(this);
             Destroyed?.Invoke(this);
+            BlastsManager.Blast(transform.position);
+        }
+
+        public void FullDestroy()
+        {
+            Realized?.Invoke(this);
+            FullDestroyed?.Invoke(this);
+            BlastsManager.Blast(transform.position);
         }
     }
 }

@@ -2,6 +2,6 @@ namespace Assets.Scripts
 {
     public interface IBulletReceiver
     {
-        void Hit();
+        void Hit(IBulletShooter bulletShooter);
     }
 }

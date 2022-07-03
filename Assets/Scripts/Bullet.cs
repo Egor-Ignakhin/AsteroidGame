@@ -10,11 +10,14 @@ namespace Assets.Scripts
         private Vector3 directon;
         private float speed = 10;
         private float movedDistance;
+        private IBulletShooter shooter;
+        private  IBulletReceiver receiver;
 
-        public void Initialize(Vector3 directon)
+        public void Initialize(Vector3 directon, IBulletShooter shooter)
         {
             movedDistance = 0;
             this.directon = directon;
+            this.shooter = shooter;
         }
 
         private void FixedUpdate()
@@ -33,16 +36,23 @@ namespace Assets.Scripts
         private void ThrowRay()
         {
             RaycastHit2D hit = Physics2D.Raycast(transform.position, directon, 0.1f);
-            if (hit.transform == null)
+            if (hit.transform == null 
+                || hit.transform.GetComponent<IBulletShooter>() == shooter)
             {
                 return;
             }
 
-            if (hit.collider.TryGetComponent(out IBulletReceiver bulletReceiver))
+            if (hit.collider.TryGetComponent(out IBulletReceiver receiver))
             {
-                bulletReceiver.Hit();
+                this.receiver = receiver;
+                this.receiver.Hit(shooter);
                 Realized?.Invoke(this);
             }
+        }
+
+        public IBulletReceiver GetBulletReceiver()
+        {
+            return receiver;
         }
     }
 }

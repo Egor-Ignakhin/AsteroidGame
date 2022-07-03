@@ -1,5 +1,5 @@
 using System;
-using TMPro;
+
 using UnityEngine;
 
 namespace Assets.Scripts.Player
@@ -8,8 +8,19 @@ namespace Assets.Scripts.Player
     {
         public event Action Changed;
 
-        private int health = 5;
-        private int scores;
+        [SerializeField] private PlayerHealth playerHealth;
+        [SerializeField] private PlayerScores playerScores;
+
+        private void Awake()
+        {
+            playerHealth.Changed += OnPlayerChanged;
+            playerScores.Changed += OnPlayerChanged;
+        }
+
+        private void OnPlayerChanged()
+        {
+            Changed?.Invoke();
+        }
 
         private void Start()
         {
@@ -18,12 +29,18 @@ namespace Assets.Scripts.Player
 
         public int GetHealth()
         {
-            return health;
+            return playerHealth.GetHealth();
         }
 
         public int GetScores()
         {
-            return scores;
+            return playerScores.GetScores();
+        }
+
+        private void OnDestroy()
+        {
+            playerHealth.Changed -= OnPlayerChanged;
+            playerScores.Changed -= OnPlayerChanged;
         }
     }
 }

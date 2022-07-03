@@ -46,11 +46,13 @@ namespace Assets.Scripts.Asteroids
             Vector3 direction = Random.insideUnitCircle.normalized;
             asteroid.Initialize(speed, direction);
 
-            asteroid.Destroyed += OnAsteroidDestroy;
+            asteroid.Destroyed += OnAsteroidDestroyed;
+            asteroid.FullDestroyed += OnAsteroidFullDestroyed;
         }
 
-        private void OnAsteroidDestroy(BaseAsteroid asteroid)
+        private void OnAsteroidDestroyed(IDestroyable destroyable)
         {
+            BaseAsteroid asteroid = (BaseAsteroid)destroyable;
             var leftDir = asteroid.Direction();
             var rightDir = asteroid.Direction();
 
@@ -63,18 +65,33 @@ namespace Assets.Scripts.Asteroids
 
             var speed = Random.Range(BaseAsteroid.MinSpeed, BaseAsteroid.MaxSpeed);
 
-            if (asteroid is BigAsteroid bigAsteroid)
+            if (asteroid is BigAsteroid)
             {
                 CreateMediumAsteroid(asteroid.transform.position, leftDir, speed);
                 CreateMediumAsteroid(asteroid.transform.position, rightDir, speed);
             }
-            else if (asteroid is MediumAsteroid mediumAsteroid)
+            else if (asteroid is MediumAsteroid)
             {
                 CreateSmallAsteroid(asteroid.transform.position, leftDir, speed);
                 CreateSmallAsteroid(asteroid.transform.position, rightDir, speed);
             }
 
-            asteroid.Destroyed -= OnAsteroidDestroy;
+            asteroid.Destroyed -= OnAsteroidDestroyed;
+            asteroid.FullDestroyed -= OnAsteroidFullDestroyed;
+
+            if (bigAsteroidsPool.InUsing() == 0 &&
+                mediumAsteroidsPool.InUsing() == 0 &&
+                smallAsteroidsPool.InUsing() == 0)
+            {
+                asteroidsWave++;
+                StartCoroutine(ReCreateAsteroids(2));
+            }
+        }
+
+        private void OnAsteroidFullDestroyed(BaseAsteroid asteroid)
+        {
+            asteroid.Destroyed -= OnAsteroidDestroyed;
+            asteroid.FullDestroyed -= OnAsteroidFullDestroyed;
 
             if (bigAsteroidsPool.InUsing() == 0 &&
                 mediumAsteroidsPool.InUsing() == 0 &&
@@ -92,7 +109,8 @@ namespace Assets.Scripts.Asteroids
             asteroid.transform.position = position;
             asteroid.Initialize(speed, direction);
 
-            asteroid.Destroyed += OnAsteroidDestroy;
+            asteroid.Destroyed += OnAsteroidDestroyed;
+            asteroid.FullDestroyed += OnAsteroidFullDestroyed;
         }
 
         private void CreateSmallAsteroid(Vector3 position, Vector3 direction, float speed)
@@ -102,7 +120,8 @@ namespace Assets.Scripts.Asteroids
             asteroid.transform.position = position;
             asteroid.Initialize(speed, direction);
 
-            asteroid.Destroyed += OnAsteroidDestroy;
+            asteroid.Destroyed += OnAsteroidDestroyed;
+            asteroid.FullDestroyed += OnAsteroidFullDestroyed;
         }
     }
 }

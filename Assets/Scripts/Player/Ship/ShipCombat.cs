@@ -1,13 +1,17 @@
+using System;
+
 using UnityEngine;
 
 namespace Assets.Scripts.Player.Ship
-{
-    public class ShipCombat : MonoBehaviour
+{//TODO: cut class on gun and gun controller
+    public class ShipCombat : MonoBehaviour, IBulletShooter
     {
+        public event Action<IBulletReceiver> BulletHited;
         private IShipInput shipInput;
         private BulletsPool bulletsPool;
         [SerializeField] private Transform bulletsParent;
         [SerializeField] private Transform bulletsInstantiatePlace;
+        [SerializeField] private AudioSource audioSource;
 
         private void Awake()
         {
@@ -27,10 +31,25 @@ namespace Assets.Scripts.Player.Ship
 
         private void OnShootKeyDown()
         {
-            var bullet = bulletsPool.GetObjectFromPool();
+            Bullet bullet = bulletsPool.GetObjectFromPool();
+            bullet.Realized += OnShootedBulletRealized;
 
             bullet.transform.position = bulletsInstantiatePlace.position;
-            bullet.Initialize(transform.right);
+            bullet.Initialize(transform.right, this);
+
+            audioSource.Play();
+        }
+
+        private void OnShootedBulletRealized(IPoolable poolable)
+        {
+            poolable.Realized -= OnShootedBulletRealized;
+
+            Bullet bullet = (Bullet)poolable;
+
+            var bulletReceiver = bullet.GetBulletReceiver();
+
+            if (bulletReceiver != null)
+                BulletHited?.Invoke(bulletReceiver);
         }
     }
 }
