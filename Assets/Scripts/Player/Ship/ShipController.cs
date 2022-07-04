@@ -3,7 +3,7 @@ using Assets.Scripts.Player.Ship.ShipStates;
 
 using System;
 using System.Collections;
-
+using Assets.Scripts.Player.Ship.States;
 using UnityEngine;
 
 namespace Assets.Scripts.Player.Ship
@@ -15,32 +15,38 @@ namespace Assets.Scripts.Player.Ship
         private IShipInput shipInput;
 
         [SerializeField] private AudioSource movementSource;
-        
+
         private ShipMovement currentMovement;
         private ShipMovement pausedMovement;
         private ShipMovement mainMovement;
-        
+
         [SerializeField] private ShipCombat shipCombat;
         [SerializeField] private ShipCollider shipCollider;
 
         private IShipState currentState;
         private IShipInput lastInput;
 
+        [SerializeField] private ShipStats shipStats;
+
         private void Awake()
         {
-            mainMovement = new MainShipMovement(transform, movementSource);
+            mainMovement = new MainShipMovement(transform, movementSource,
+                shipStats.GetMovingSpeed(),
+                shipStats.GetRotationSpeed(),
+                shipStats.GetMovingInertia(),
+                shipStats.GetRotationInertia());
             pausedMovement = new PausedShipMovement(transform, movementSource);
             SetInput(new KeyboardShipInput());
-            shipCollider.DestroyableContacted += OnDestroyableContacted;
-            shipCollider.BulletReceived += FullDestroy;
         }
 
         private void Start()
         {
-            SetState(new InvulnerabilityShipState());
+            shipCollider.DestroyableContacted += OnDestroyableContacted;
+            shipCollider.BulletReceived += Destroy;
+            StartCoroutine(nameof(ReBorning));
         }
 
-        private void SetState(IShipState state)
+        public void SetState(IShipState state)
         {
             currentState = state;
 
@@ -49,9 +55,12 @@ namespace Assets.Scripts.Player.Ship
 
         private void OnDestroyableContacted(IDestroyable obj)
         {
-            obj.FullDestroy();
+            if (currentState is InvulnerabilityShipState)
+                return;
 
-            FullDestroy();
+            obj.Destroy();
+
+            Destroy();
         }
 
         private IEnumerator ReBorning()
@@ -59,6 +68,8 @@ namespace Assets.Scripts.Player.Ship
             SetState(new InvulnerabilityShipState());
 
             yield return new WaitForSeconds(3);
+
+            SetState(new MainShipState());
         }
 
         private void Update()
@@ -71,11 +82,11 @@ namespace Assets.Scripts.Player.Ship
             currentMovement.LateUpdate();
         }
 
-        public void FullDestroy()
+        public void Destroy()
         {
             Destroyed?.Invoke(this);
 
-            BlastsManager.Blast(transform.position);
+            BlastBuilder.Build(transform.position);
 
             StartCoroutine(nameof(ReBorning));
         }
@@ -104,15 +115,19 @@ namespace Assets.Scripts.Player.Ship
             shipCombat.SetShipInput(shipInput);
         }
 
+        public void SetLastInput(IShipInput input)
+        {
+            lastInput = input;
+        }
         public IShipInput GetLastInput()
         {
             return lastInput;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             shipCollider.DestroyableContacted -= OnDestroyableContacted;
-            shipCollider.BulletReceived -= FullDestroy;
+            shipCollider.BulletReceived -= Destroy;
         }
     }
 }

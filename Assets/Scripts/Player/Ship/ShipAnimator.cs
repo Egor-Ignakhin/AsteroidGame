@@ -1,7 +1,7 @@
 using Assets.Scripts.Player.Ship.ShipStates;
 
 using System.Collections;
-
+using Assets.Scripts.Player.Ship.States;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,20 +12,19 @@ namespace Assets.Scripts.Player.Ship
         [SerializeField] private ShipController shipController;
         [SerializeField] private Image imgRenderer;
 
-        private void Awake()
+        private void OnEnable()
         {
             shipController.StateChanged += OnShipStateChanged;
         }
 
         private void OnShipStateChanged()
         {
-            transform.position = new Vector3(Screen.width / 2f, Screen.height / 2f);
-
             StopAllCoroutines();
 
             if (shipController.GetState() is InvulnerabilityShipState)
             {
                 StartCoroutine(nameof(InvulnerabilityIndicate));
+                shipController.transform.position = new Vector3(Screen.width / 2f, Screen.height / 2f);
             }
             else if (shipController.GetState() is MainShipState)
             {
@@ -46,7 +45,7 @@ namespace Assets.Scripts.Player.Ship
             imgRenderer.enabled = true;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             shipController.StateChanged -= OnShipStateChanged;
         }

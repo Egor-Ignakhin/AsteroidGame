@@ -1,3 +1,4 @@
+using Assets.Scripts.Bullets;
 using Assets.Scripts.Player;
 using UnityEngine;
 

@@ -13,7 +13,6 @@ namespace Assets.Scripts.Asteroids
         public event Action<BaseAsteroid> FullDestroyed;
         public event Action<IPoolable> Realized;
 
-        private float speed;
         public const float MinSpeed = 1;
         public const float MaxSpeed = 5;
 
@@ -51,9 +50,7 @@ namespace Assets.Scripts.Asteroids
 
         public void Initialize(float speed, Vector3 direction)
         {
-            this.speed = speed;
             this.direction = direction;
-
 
             mainAsteroidMovement.Inititalize(direction, speed);
             pausedAsteroidMovement.Inititalize(direction, speed);
@@ -66,21 +63,21 @@ namespace Assets.Scripts.Asteroids
 
         public void Hit(IBulletShooter _)
         {
-            Destroy();
+            Divide();
         }
 
-        private void Destroy()
+        private void Divide()
         {
             Realized?.Invoke(this);
             Destroyed?.Invoke(this);
-            BlastsManager.Blast(transform.position);
+            BlastBuilder.Build(transform.position);
         }
 
-        public void FullDestroy()
+        public void Destroy()
         {
             Realized?.Invoke(this);
             FullDestroyed?.Invoke(this);
-            BlastsManager.Blast(transform.position);
+            BlastBuilder.Build(transform.position);
         }
 
         private void OnDestroy()

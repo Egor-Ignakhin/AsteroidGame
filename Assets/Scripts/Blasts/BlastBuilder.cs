@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class BlastsManager : MonoBehaviour
+    public class BlastBuilder : MonoBehaviour
     {
         private static ObjectPool<Blast> blastsPool;
 
@@ -13,7 +13,7 @@ namespace Assets.Scripts
             blastsPool = new BlastsPool(blastsParent, 5);
         }
 
-        public static void Blast(Vector3 position)
+        public static void Build(Vector3 position)
         {
             var blast = blastsPool.GetObjectFromPool();
 

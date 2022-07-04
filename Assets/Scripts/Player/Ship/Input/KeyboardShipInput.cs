@@ -1,4 +1,5 @@
 using System;
+
 using UnityEngine;
 
 namespace Assets.Scripts.Player.Ship
@@ -6,27 +7,29 @@ namespace Assets.Scripts.Player.Ship
     public class KeyboardShipInput : IShipInput
     {
         private float timeFromLastShot;
-        public event Action AccelerationKeysPressed;
+        public event Action MovingKeysPressed;
         public event Action RotationKeysPressed;
         public event Action ShootKeyDown;
+        public event Action MouseMoved;
+
         public float GetMoveSign()
         {
             return Math.Sign(CalcVerAxis());
         }
 
-        public Vector3 GetRotationDirection()
+        public virtual float GetRotationSign()
         {
-            return CalcHorDirection();
+            return Math.Sign(CalcHorAxis());
         }
 
-        public void Update()
+        public virtual void Update()
         {
             float verAxis = CalcVerAxis();
-            float horAxis = CalcHorDirection().magnitude;
+            float horAxis = CalcHorAxis();
 
             if (verAxis != 0)
             {
-                AccelerationKeysPressed?.Invoke();
+                MovingKeysPressed?.Invoke();
             }
             if (horAxis != 0)
             {
@@ -45,16 +48,26 @@ namespace Assets.Scripts.Player.Ship
             timeFromLastShot += Time.deltaTime;
         }
 
-        private float CalcVerAxis()
+        protected virtual float CalcVerAxis()
         {
             var verAxis = Input.GetAxis("Vertical");
 
             return verAxis;
         }
 
-        private Vector3 CalcHorDirection()
+        protected virtual float CalcHorAxis()
         {
-            return new Vector3(0, 0, -Input.GetAxis("Horizontal"));
+            return -Input.GetAxis("Horizontal");
+        }
+
+        protected void CallMouseMoved()
+        {
+            MouseMoved?.Invoke();
+        }
+
+        protected void CallRotationKeysPressed()
+        {
+            MovingKeysPressed?.Invoke();
         }
     }
 }

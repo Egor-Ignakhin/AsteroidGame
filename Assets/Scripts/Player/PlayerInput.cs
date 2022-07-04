@@ -1,4 +1,5 @@
 using System;
+
 using UnityEngine;
 
 namespace Assets.Scripts.Player
@@ -12,8 +13,7 @@ namespace Assets.Scripts.Player
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                isPaused = !isPaused;
-                Paused?.Invoke();
+                SetPaused(!isPaused);
             }
         }
 
@@ -25,6 +25,12 @@ namespace Assets.Scripts.Player
         private void OnDestroy()
         {
             Paused = null;
+        }
+
+        public void SetPaused(bool b)
+        {
+            isPaused = b;
+            Paused?.Invoke();
         }
     }
 }

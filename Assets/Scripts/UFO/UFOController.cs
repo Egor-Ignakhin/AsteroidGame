@@ -2,7 +2,7 @@ using Assets.Scripts.Player;
 
 using System;
 using System.Collections;
-
+using Assets.Scripts.Bullets;
 using UnityEngine;
 
 using Random = UnityEngine.Random;
@@ -47,12 +47,12 @@ namespace Assets.Scripts.UFO
 
         private void OnDestroyableContacted(IDestroyable obj)
         {
-            FullDestroy();
+            Destroy();
         }
 
         private void OnBulletReceived(IBulletShooter shooter)
         {
-            FullDestroy();
+            Destroy();
         }
 
         public void Initialize(Vector3 position, Vector3 target)
@@ -92,11 +92,11 @@ namespace Assets.Scripts.UFO
         }
 
 
-        public void FullDestroy()
+        public void Destroy()
         {
             StopAllCoroutines();
             Realized?.Invoke();
-            BlastsManager.Blast(transform.position);
+            BlastBuilder.Build(transform.position);
         }
 
         private void OnDestroy()

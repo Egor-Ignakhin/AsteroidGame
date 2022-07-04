@@ -6,9 +6,10 @@ using UnityEngine;
 
 public class PausedShipInput : IShipInput
 {
-    public event Action AccelerationKeysPressed;
+    public event Action MovingKeysPressed;
     public event Action RotationKeysPressed;
     public event Action ShootKeyDown;
+    public event Action MouseMoved;
 
     public float GetMoveSign()
     {
@@ -23,5 +24,10 @@ public class PausedShipInput : IShipInput
     public Vector3 GetRotationDirection()
     {
         return Vector3.zero;
+    }
+
+    public float GetRotationSign()
+    {
+        return 0;
     }
 }

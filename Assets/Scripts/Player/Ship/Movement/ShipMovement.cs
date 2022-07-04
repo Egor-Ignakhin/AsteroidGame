@@ -7,10 +7,8 @@ namespace Assets.Scripts.Player.Ship.Movement
     public abstract class ShipMovement
     {
         protected IShipInput shipInput;
-        protected float moveMomentum = 0;
-        protected float rotateMomentum = 0;
-        protected Vector3 lastMoveDirection;
-        protected Vector3 lastRotateDirection;
+        protected Vector3 moveVelocity;
+        protected Vector3 rotateVelocity;
         protected Transform mTransform;
         [SerializeField] protected AudioSource audioSource;
 
@@ -24,32 +22,24 @@ namespace Assets.Scripts.Player.Ship.Movement
         {
             if (this.shipInput != null)
             {
-                this.shipInput.AccelerationKeysPressed -= AccelerationKeysPressed;
+                this.shipInput.MovingKeysPressed -= MovingKeysPressed;
                 this.shipInput.RotationKeysPressed -= RotationKeysPressed;
+                this.shipInput.MouseMoved -= OnMouseMoved;
             }
 
             this.shipInput = shipInput;
 
-            this.shipInput.AccelerationKeysPressed += AccelerationKeysPressed;
+            this.shipInput.MovingKeysPressed += MovingKeysPressed;
             this.shipInput.RotationKeysPressed += RotationKeysPressed;
+            this.shipInput.MouseMoved += OnMouseMoved;
         }
 
-        protected abstract void AccelerationKeysPressed();
+        protected abstract void MovingKeysPressed();
 
         protected abstract void RotationKeysPressed();
 
+        protected abstract void OnMouseMoved();
+
         public abstract void LateUpdate();
-
-        protected Vector3 CalcRotateMomentum()
-        {
-            float rotateSmoothing = rotateMomentum / 10;
-            return lastRotateDirection *= rotateSmoothing;
-        }
-
-        protected Vector3 CalcMoveMomentum()
-        {
-            float moveSmoothing = moveMomentum / 10;
-            return lastMoveDirection *= moveSmoothing;
-        }
     }
 }

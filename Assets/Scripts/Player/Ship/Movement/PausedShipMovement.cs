@@ -8,12 +8,17 @@ namespace Assets.Scripts.Player.Ship.Movement
         {
         }
 
-        protected override void AccelerationKeysPressed()
+        protected override void MovingKeysPressed()
         {
         }
 
         protected override void RotationKeysPressed()
         {
+        }
+
+        protected override void OnMouseMoved()
+        {
+            throw new System.NotImplementedException();
         }
 
         public override void LateUpdate()
