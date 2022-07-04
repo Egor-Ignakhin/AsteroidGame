@@ -1,8 +1,7 @@
-using Assets.Scripts.Bullets;
 using Assets.Scripts.Player;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Bullets
 {
     public class BulletsPool : ObjectPool<Bullet>
     {

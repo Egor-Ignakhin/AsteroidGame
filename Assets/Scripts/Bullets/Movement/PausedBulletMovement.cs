@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Bullets.Movement
 {
-    public class PausedBulletMotion : IBulletMotion
+    public class PausedBulletMovement : IBulletMovement
     {
         public event Action MovementIsOver;
 

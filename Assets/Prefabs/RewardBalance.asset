@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 950c2fc83cca6404b854c7397d85149b, type: 3}
-  m_Name: ScoresBalance
+  m_Name: RewardBalance
   m_EditorClassIdentifier: 
-  bigAsteroidDestroyReward: 20
-  mediumAsteroidDestroyReward: 50
-  smallAsteroidDestroyReward: 100
-  UFODestroyReward: 200
+  bigAsteroidDestroy: 20
+  mediumAsteroidDestroy: 50
+  smallAsteroidDestroy: 100
+  UFODestroy: 200

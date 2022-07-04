@@ -1,4 +1,5 @@
 using System;
+using Assets.Scripts.Bullets.Movement;
 using Assets.Scripts.Player;
 using UnityEngine;
 
@@ -12,9 +13,9 @@ namespace Assets.Scripts.Bullets
         private IBulletReceiver bulletReceiver;
         private PlayerInput playerInput;
 
-        private IBulletMotion currentBulletMotion;
-        private IBulletMotion mainBulletMotion;
-        private IBulletMotion pausedBulletMotion;
+        private IBulletMovement currentBulletMovement;
+        private IBulletMovement mainBulletMovement;
+        private IBulletMovement pausedBulletMovement;
         
         private BulletCollisionChecker collisionChecker;
 
@@ -22,11 +23,11 @@ namespace Assets.Scripts.Bullets
         {
             this.playerInput = playerInput;
 
-            mainBulletMotion = new MainBulletMotion(transform);
-            pausedBulletMotion = new PausedBulletMotion();
+            mainBulletMovement = new MainBulletMovement(transform);
+            pausedBulletMovement = new PausedBulletMovement();
             collisionChecker = new BulletCollisionChecker(transform);
             collisionChecker.Collided += OnCollided;
-            mainBulletMotion.MovementIsOver += OnMovementIsOver;
+            mainBulletMovement.MovementIsOver += OnMovementIsOver;
 
             playerInput.Paused += OnPaused;
             OnPaused();
@@ -46,20 +47,20 @@ namespace Assets.Scripts.Bullets
 
         private void OnPaused()
         {
-            currentBulletMotion = playerInput.IsPaused() ?
-                pausedBulletMotion : mainBulletMotion;
+            currentBulletMovement = playerInput.IsPaused() ?
+                pausedBulletMovement : mainBulletMovement;
         }
 
         public void Initialize(Vector3 direction, IBulletShooter shooter)
         {
             bulletShooter = shooter;
-            mainBulletMotion.Initialize(direction, 10);
+            mainBulletMovement.Initialize(direction, 10);
             collisionChecker.Initialize(shooter, direction);
         }
 
         private void FixedUpdate()
         {
-            currentBulletMotion.Move();
+            currentBulletMovement.Move();
 
             collisionChecker.Update();
         }

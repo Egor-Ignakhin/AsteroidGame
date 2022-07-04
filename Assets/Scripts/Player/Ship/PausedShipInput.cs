@@ -1,33 +1,34 @@
-using Assets.Scripts.Player.Ship;
-
 using System;
-
+using Assets.Scripts.Player.Ship.ShipInput;
 using UnityEngine;
 
-public class PausedShipInput : IShipInput
+namespace Assets.Scripts.Player.Ship
 {
-    public event Action MovingKeysPressed;
-    public event Action RotationKeysPressed;
-    public event Action ShootKeyDown;
-    public event Action MouseMoved;
-
-    public float GetMoveSign()
+    public class PausedShipInput : IShipInput
     {
-        return 0;
-    }
+        public event Action MovingKeysPressed;
+        public event Action RotationKeysPressed;
+        public event Action ShootKeyDown;
+        public event Action MouseMoved;
 
-    public void Update()
-    {
+        public float GetMoveSign()
+        {
+            return 0;
+        }
 
-    }
+        public void Update()
+        {
 
-    public Vector3 GetRotationDirection()
-    {
-        return Vector3.zero;
-    }
+        }
 
-    public float GetRotationSign()
-    {
-        return 0;
+        public Vector3 GetRotationDirection()
+        {
+            return Vector3.zero;
+        }
+
+        public float GetRotationSign()
+        {
+            return 0;
+        }
     }
 }

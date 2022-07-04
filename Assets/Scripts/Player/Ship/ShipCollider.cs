@@ -1,4 +1,5 @@
 using System;
+using Assets.Scripts.Bullets;
 using UnityEngine;
 
 namespace Assets.Scripts.Player.Ship

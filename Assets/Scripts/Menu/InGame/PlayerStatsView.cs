@@ -6,24 +6,28 @@ namespace Assets.Scripts.Menu.InGame
 {
     public class PlayerStatsView : MonoBehaviour
     {
-        [SerializeField] private PlayerStats playerStats;
+        [SerializeField] private PlayerHealth playerHealth;
+        [SerializeField] private PlayerScores playerScores;
+
         [SerializeField] private TextMeshProUGUI playerHealthText;
         [SerializeField] private TextMeshProUGUI playerScoresText;
 
         private void Awake()
         {
-            playerStats.Changed += OnStatsChanged;
+            playerHealth.Changed += OnStatsChanged;
+            playerScores.Changed += OnStatsChanged;
         }
 
         private void OnStatsChanged()
         {
-            playerHealthText.SetText($"Health: {playerStats.GetHealth()}");
-            playerScoresText.SetText($"Scores: {playerStats.GetScores()}");
+            playerHealthText.SetText($"Health: {playerHealth.GetHealth()}");
+            playerScoresText.SetText($"Scores: {playerScores.GetScores()}");
         }
 
         private void OnDestroy()
         {
-            playerStats.Changed -= OnStatsChanged;
+            playerHealth.Changed -= OnStatsChanged;
+            playerScores.Changed -= OnStatsChanged;
         }
     }
 }

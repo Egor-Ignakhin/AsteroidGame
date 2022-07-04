@@ -18,10 +18,10 @@ namespace Assets.Scripts.Player.Ship.Movement
 
         protected override void OnMouseMoved()
         {
-            throw new System.NotImplementedException();
+            
         }
 
-        public override void LateUpdate()
+        public override void FixedUpdate()
         {
         }
     }

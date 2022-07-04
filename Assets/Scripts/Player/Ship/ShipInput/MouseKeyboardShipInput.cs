@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.Scripts.Player.Ship
+namespace Assets.Scripts.Player.Ship.ShipInput
 {
     public class MouseKeyboardShipInput : KeyboardShipInput
     {
@@ -9,8 +9,6 @@ namespace Assets.Scripts.Player.Ship
         protected override float CalcHorAxis()
         {
             var f = (Input.mousePosition - lastMousePos).z;
-
-            lastMousePos = Input.mousePosition;
 
             return f;
         }
@@ -34,6 +32,7 @@ namespace Assets.Scripts.Player.Ship
             if (Input.mousePosition != lastMousePos)
             {
                 CallMouseMoved();
+                lastMousePos = Input.mousePosition;
             }
         }
     }

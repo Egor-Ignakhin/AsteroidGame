@@ -13,7 +13,7 @@ namespace Assets.Scripts.Asteroids.AsteroidMovement
             this.mTransform = mTransform;
         }
 
-        public void Inititalize(Vector3 direction, float speed)
+        public void Initialize(Vector3 direction, float speed)
         {
             this.direction = direction;
             this.speed = speed;

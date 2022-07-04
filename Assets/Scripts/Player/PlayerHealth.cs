@@ -1,5 +1,5 @@
 using System;
-using Assets.Scripts.Player.Ship;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,9 +10,11 @@ namespace Assets.Scripts.Player
         public event Action Changed;
 
         [SerializeField] private GameObject shipDestroyableGM;
-        private  IDestroyable shipDestroyable;
+        private IDestroyable shipDestroyable;
 
-        private int health = 5;
+        [SerializeField] private PlayerStats playerStats;
+
+        private int health;
 
         public int GetHealth()
         {
@@ -21,6 +23,7 @@ namespace Assets.Scripts.Player
 
         private void Awake()
         {
+            health = playerStats.GetStartPlayerHealth();
             shipDestroyable = shipDestroyableGM.GetComponent<IDestroyable>();
             shipDestroyable.Destroyed += Kill;
         }
@@ -30,7 +33,7 @@ namespace Assets.Scripts.Player
             health--;
             Changed?.Invoke();
 
-            if (health == 0)
+            if (health == playerStats.GetMinPlayerHealth())
             {
                 SceneManager.LoadScene(0);
             }

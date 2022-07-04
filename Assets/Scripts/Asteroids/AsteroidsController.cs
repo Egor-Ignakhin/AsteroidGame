@@ -37,7 +37,7 @@ namespace Assets.Scripts.Asteroids
             {
                 CreateBigAsteroid(new Vector3(Random.Range(0, Screen.width),
                     Random.Range(0, Screen.height)),
-                    Random.Range(BaseAsteroid.MinSpeed, BaseAsteroid.MaxSpeed));
+                    Random.Range(Asteroid.MinSpeed, Asteroid.MaxSpeed));
             }
         }
 
@@ -55,7 +55,7 @@ namespace Assets.Scripts.Asteroids
 
         private void OnAsteroidDestroyed(IDestroyable destroyable)
         {
-            BaseAsteroid asteroid = (BaseAsteroid)destroyable;
+            Asteroid asteroid = (Asteroid)destroyable;
             var leftDir = asteroid.Direction();
             var rightDir = asteroid.Direction();
 
@@ -66,7 +66,7 @@ namespace Assets.Scripts.Asteroids
             rightDir.x = rightDir.x * Mathf.Cos(-angle) + rightDir.y * Mathf.Sin(-angle);
             rightDir.y = rightDir.y * Mathf.Cos(-angle) - rightDir.x * Mathf.Sin(-angle);
 
-            var speed = Random.Range(BaseAsteroid.MinSpeed, BaseAsteroid.MaxSpeed);
+            var speed = Random.Range(Asteroid.MinSpeed, Asteroid.MaxSpeed);
 
             if (asteroid is BigAsteroid)
             {
@@ -91,7 +91,7 @@ namespace Assets.Scripts.Asteroids
             }
         }
 
-        private void OnAsteroidFullDestroyed(BaseAsteroid asteroid)
+        private void OnAsteroidFullDestroyed(Asteroid asteroid)
         {
             asteroid.Destroyed -= OnAsteroidDestroyed;
             asteroid.FullDestroyed -= OnAsteroidFullDestroyed;

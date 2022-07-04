@@ -1,10 +1,6 @@
-using System;
-
-using UnityEngine;
-
 namespace Assets.Scripts.Asteroids
 {
-    public class BigAsteroid : BaseAsteroid
+    public class BigAsteroid : Asteroid
     {
     }
 }

@@ -2,21 +2,22 @@ using Assets.Scripts.Asteroids.AsteroidMovement;
 using Assets.Scripts.Player;
 
 using System;
-
+using Assets.Scripts.Blasts;
+using Assets.Scripts.Bullets;
 using UnityEngine;
 
 namespace Assets.Scripts.Asteroids
 {
-    public abstract class BaseAsteroid : MonoBehaviour, IBulletReceiver, IPoolable, IDestroyable
+    public abstract class Asteroid : MonoBehaviour, IBulletReceiver, IPoolable, IDestroyable
     {
         public event Action<IDestroyable> Destroyed;
-        public event Action<BaseAsteroid> FullDestroyed;
+        public event Action<Asteroid> FullDestroyed;
         public event Action<IPoolable> Realized;
 
         public const float MinSpeed = 1;
         public const float MaxSpeed = 5;
 
-        private Vector3 direction;
+        private Vector3 asteroidDirection;
 
         private PlayerInput playerInput;
         private IAsteroidMovement currentAsteroidMovement;
@@ -25,7 +26,7 @@ namespace Assets.Scripts.Asteroids
 
         public Vector3 Direction()
         {
-            return direction;
+            return asteroidDirection;
         }
 
         private void Awake()
@@ -34,11 +35,11 @@ namespace Assets.Scripts.Asteroids
             pausedAsteroidMovement = new PausedAsteroidMovement();
         }
 
-        public void Setup(PlayerInput playerInput)
+        public void Setup(PlayerInput pInput)
         {
-            this.playerInput = playerInput;
+            this.playerInput = pInput;
 
-            playerInput.Paused += OnPaused;
+            pInput.Paused += OnPaused;
             OnPaused();
         }
 
@@ -50,10 +51,10 @@ namespace Assets.Scripts.Asteroids
 
         public void Initialize(float speed, Vector3 direction)
         {
-            this.direction = direction;
+            this.asteroidDirection = direction;
 
-            mainAsteroidMovement.Inititalize(direction, speed);
-            pausedAsteroidMovement.Inititalize(direction, speed);
+            mainAsteroidMovement.Initialize(direction, speed);
+            pausedAsteroidMovement.Initialize(direction, speed);
         }
 
         private void FixedUpdate()

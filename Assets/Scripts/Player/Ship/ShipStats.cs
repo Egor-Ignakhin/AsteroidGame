@@ -5,28 +5,28 @@ namespace Assets.Scripts.Player.Ship
     [CreateAssetMenu(fileName = "ShipStats", menuName = "ScriptableObjects/ShipStats", order = 1)]
     public class ShipStats : ScriptableObject
     {
-        [SerializeField] private float movingSpeed;
-        [SerializeField] private float rotationSpeed;
-        [SerializeField, Range(0, 1)] private float movingInertia;
-        [SerializeField, Range(0, 1)] private float rotationInertia;
+        [SerializeField] private float movementSpeed;
+        [SerializeField] private float rotationalSpeed;
+        [SerializeField, Range(0, 1)] private float movementInertia;
+        [SerializeField, Range(0, 1)] private float rotationalInertia;
 
-        public float GetMovingSpeed()
+        public float GetMovementSpeed()
         {
-            return movingSpeed;
+            return movementSpeed;
         }
 
-        public float GetRotationSpeed()
+        public float GetRotationalSpeed()
         {
-            return rotationSpeed;
+            return rotationalSpeed;
         }
 
-        public float GetMovingInertia()
+        public float GetMovementInertia()
         {
-            return movingInertia;
+            return movementInertia;
         }
-        public float GetRotationInertia()
+        public float GetRotationalInertia()
         {
-            return rotationInertia;
+            return rotationalInertia;
         }
     }
 }

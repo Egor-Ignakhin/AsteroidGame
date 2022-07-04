@@ -8,10 +8,11 @@ namespace Assets.Scripts.Player
     {
         public event Action Paused;
         private bool isPaused = false;
+        [SerializeField] private KeyCode pauseKeyCode = KeyCode.Escape;
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(pauseKeyCode))
             {
                 SetPaused(!isPaused);
             }

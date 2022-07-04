@@ -1,7 +1,6 @@
 using System;
-using UnityEngine;
 
-namespace Assets.Scripts.Player.Ship
+namespace Assets.Scripts.Player.Ship.ShipInput
 {
     public interface IShipInput
     {

@@ -1,6 +1,6 @@
 using Assets.Scripts.Player;
 using Assets.Scripts.Player.Ship;
-
+using Assets.Scripts.Player.Ship.ShipInput;
 using TMPro;
 
 using UnityEngine;
@@ -12,7 +12,7 @@ namespace Assets.Scripts.Menu.OutOfGame
     public class PauseMenu : MonoBehaviour
     {
         [SerializeField] private PlayerInput playerInput;
-        [SerializeField] private ShipController shipController;
+        [SerializeField] private Ship ship;
         [SerializeField] private GameObject panel;
         [SerializeField] private TMP_Dropdown shipInputDropdown;
         [SerializeField] private Button continueButton;
@@ -32,7 +32,7 @@ namespace Assets.Scripts.Menu.OutOfGame
         {
             bool isPaused = playerInput.IsPaused();
             panel.SetActive(isPaused);
-            shipController.SetInput(isPaused ? new PausedShipInput() : shipController.GetLastInput());
+            ship.SetInput(isPaused ? new PausedShipInput() : ship.GetLastInput());
 
             continueButton.interactable = GameStarter.GameIsStarted();
         }
@@ -56,11 +56,11 @@ namespace Assets.Scripts.Menu.OutOfGame
         {
             if (inputOption == 0)
             {
-                shipController.SetLastInput(new KeyboardShipInput());
+                ship.SetLastInput(new KeyboardShipInput());
             }
             else if (inputOption == 1)
             {
-                shipController.SetLastInput(new MouseKeyboardShipInput());
+                ship.SetLastInput(new MouseKeyboardShipInput());
             }
         }
 

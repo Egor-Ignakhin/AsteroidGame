@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Bullets.Movement
 {
-    public class MainBulletMotion : IBulletMotion
+    public class MainBulletMovement : IBulletMovement
     {
         public event  Action MovementIsOver;
         private readonly Transform mTransform;
@@ -12,7 +12,7 @@ namespace Assets.Scripts
         private float movedDistance;
         private Vector3 lastPosition;
 
-        public MainBulletMotion(Transform transform)
+        public MainBulletMovement(Transform transform)
         {
             mTransform = transform;
         }

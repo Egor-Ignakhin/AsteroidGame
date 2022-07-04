@@ -1,46 +1,22 @@
-using System;
 
 using UnityEngine;
 
 namespace Assets.Scripts.Player
 {
-    public class PlayerStats : MonoBehaviour
+    [CreateAssetMenu(fileName = "PlayerStats", menuName = "ScriptableObjects/PlayerStats", order = 1)]
+    public class PlayerStats : ScriptableObject
     {
-        public event Action Changed;
+        [SerializeField] private int startPlayerHealth;
+        [SerializeField] private int minPlayerHealth;
 
-        [SerializeField] private PlayerHealth playerHealth;
-        [SerializeField] private PlayerScores playerScores;
-
-        private void Awake()
+        public int GetStartPlayerHealth()
         {
-            playerHealth.Changed += OnPlayerChanged;
-            playerScores.Changed += OnPlayerChanged;
+            return startPlayerHealth;
         }
 
-        private void OnPlayerChanged()
+        public int GetMinPlayerHealth()
         {
-            Changed?.Invoke();
-        }
-
-        private void Start()
-        {
-            Changed?.Invoke();
-        }
-
-        public int GetHealth()
-        {
-            return playerHealth.GetHealth();
-        }
-
-        public int GetScores()
-        {
-            return playerScores.GetScores();
-        }
-
-        private void OnDestroy()
-        {
-            playerHealth.Changed -= OnPlayerChanged;
-            playerScores.Changed -= OnPlayerChanged;
+            return minPlayerHealth;
         }
     }
 }

@@ -1,14 +1,14 @@
 using Assets.Scripts.Player.Ship.Movement;
-using Assets.Scripts.Player.Ship.ShipStates;
-
 using System;
 using System.Collections;
+using Assets.Scripts.Blasts;
+using Assets.Scripts.Player.Ship.ShipInput;
 using Assets.Scripts.Player.Ship.States;
 using UnityEngine;
 
 namespace Assets.Scripts.Player.Ship
 {
-    public class ShipController : MonoBehaviour, IDestroyable
+    public class Ship : MonoBehaviour, IDestroyable
     {
         public event Action StateChanged;
         public event Action<IDestroyable> Destroyed;
@@ -20,30 +20,32 @@ namespace Assets.Scripts.Player.Ship
         private ShipMovement pausedMovement;
         private ShipMovement mainMovement;
 
-        [SerializeField] private ShipCombat shipCombat;
-        [SerializeField] private ShipCollider shipCollider;
+        [SerializeField] private ShipsCannon cannon;
+        [SerializeField] private ShipCollider mCollider;
 
         private IShipState currentState;
         private IShipInput lastInput;
 
-        [SerializeField] private ShipStats shipStats;
+        [SerializeField] private ShipStats stats;
 
         private void Awake()
         {
-            mainMovement = new MainShipMovement(transform, movementSource,
-                shipStats.GetMovingSpeed(),
-                shipStats.GetRotationSpeed(),
-                shipStats.GetMovingInertia(),
-                shipStats.GetRotationInertia());
+            mainMovement = new MainShipMovement(
+                transform,
+                movementSource,
+                stats.GetMovementSpeed(),
+                stats.GetRotationalSpeed(),
+                stats.GetMovementInertia(),
+                stats.GetRotationalInertia());
             pausedMovement = new PausedShipMovement(transform, movementSource);
             SetInput(new KeyboardShipInput());
         }
 
         private void Start()
         {
-            shipCollider.DestroyableContacted += OnDestroyableContacted;
-            shipCollider.BulletReceived += Destroy;
-            StartCoroutine(nameof(ReBorning));
+            mCollider.DestroyableContacted += OnDestroyableContacted;
+            mCollider.BulletReceived += Destroy;
+            StartCoroutine(nameof(Rebirth));
         }
 
         public void SetState(IShipState state)
@@ -63,7 +65,7 @@ namespace Assets.Scripts.Player.Ship
             Destroy();
         }
 
-        private IEnumerator ReBorning()
+        private IEnumerator Rebirth()
         {
             SetState(new InvulnerabilityShipState());
 
@@ -72,14 +74,14 @@ namespace Assets.Scripts.Player.Ship
             SetState(new MainShipState());
         }
 
+        private void FixedUpdate()
+        {
+            currentMovement.FixedUpdate();
+        }
+
         private void Update()
         {
             shipInput?.Update();
-        }
-
-        private void LateUpdate()
-        {
-            currentMovement.LateUpdate();
         }
 
         public void Destroy()
@@ -88,7 +90,7 @@ namespace Assets.Scripts.Player.Ship
 
             BlastBuilder.Build(transform.position);
 
-            StartCoroutine(nameof(ReBorning));
+            StartCoroutine(nameof(Rebirth));
         }
 
         public IShipState GetState()
@@ -102,32 +104,26 @@ namespace Assets.Scripts.Player.Ship
 
             shipInput = input;
 
-            if (input is PausedShipInput)
-            {
-                currentMovement = pausedMovement;
-            }
-            else
-            {
-                currentMovement = mainMovement;
-            }
+            currentMovement = input is PausedShipInput ? pausedMovement : mainMovement;
 
             currentMovement.SetShipInput(shipInput);
-            shipCombat.SetShipInput(shipInput);
+            cannon.SetShipInput(shipInput);
+        }
+
+        public IShipInput GetLastInput()
+        {
+            return lastInput;
         }
 
         public void SetLastInput(IShipInput input)
         {
             lastInput = input;
         }
-        public IShipInput GetLastInput()
-        {
-            return lastInput;
-        }
 
         private void OnDisable()
         {
-            shipCollider.DestroyableContacted -= OnDestroyableContacted;
-            shipCollider.BulletReceived -= Destroy;
+            mCollider.DestroyableContacted -= OnDestroyableContacted;
+            mCollider.BulletReceived -= Destroy;
         }
     }
 }

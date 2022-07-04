@@ -1,15 +1,11 @@
-using Assets.Scripts.Player.Ship;
-using Assets.Scripts.Player.Ship.ShipStates;
-
-using System;
-
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Menu.OutOfGame
 {
     public class GameStarter : MonoBehaviour
     {
         [SerializeField] private GameObject playerGameObject;
+        [SerializeField] private GameObject ufoCreatorGameObject;
         [SerializeField] private GameObject ui;
         private static bool gameIsStarted;
 
@@ -17,6 +13,7 @@ namespace Assets.Scripts
         {
             gameIsStarted = false;
             playerGameObject.SetActive(false);
+            ufoCreatorGameObject.SetActive(false);
         }
 
         private void Update()
@@ -25,6 +22,7 @@ namespace Assets.Scripts
             if (gameIsStarted) return;
 
             playerGameObject.SetActive(true);
+            ufoCreatorGameObject.SetActive(true);
             ui.SetActive(false);
             gameIsStarted = true;
         }

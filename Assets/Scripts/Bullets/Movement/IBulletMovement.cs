@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Bullets.Movement
 {
-    internal interface IBulletMotion
+    internal interface IBulletMovement
     {
         event Action MovementIsOver;
 

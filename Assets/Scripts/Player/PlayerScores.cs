@@ -1,18 +1,19 @@
-using System;
 using Assets.Scripts.Balance;
 using Assets.Scripts.Player.Ship;
+
+using System;
+using Assets.Scripts.Bullets;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Player
 {
     public class PlayerScores : MonoBehaviour
     {
         public event Action Changed;
-        [SerializeField] private ScoresBalance scoresBalance;
+        [SerializeField] private RewardBalance rewardBalance;
+        [SerializeField] private ShipsCannon shipsCannon;
 
-        [SerializeField] private ShipCombat shipCombat;
-        private int scores = 0;
+        private int scores;
 
         public int GetScores()
         {
@@ -21,19 +22,19 @@ namespace Assets.Scripts.Player
 
         private void Awake()
         {
-            shipCombat.BulletHited += OnBulletHited;
+            shipsCannon.BulletHit += OnBulletHit;
         }
 
-        public void OnBulletHited(IBulletReceiver bulletReceiver)
+        public void OnBulletHit(IBulletReceiver bulletReceiver)
         {
-            scores += scoresBalance.CalcScores(bulletReceiver);
+            scores += rewardBalance.CalcScores(bulletReceiver);
 
             Changed?.Invoke();
         }
 
         private void OnDestroy()
         {
-            shipCombat.BulletHited -= OnBulletHited;
+            shipsCannon.BulletHit -= OnBulletHit;
         }
     }
 }

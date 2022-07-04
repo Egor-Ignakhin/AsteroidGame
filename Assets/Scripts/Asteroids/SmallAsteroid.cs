@@ -1,6 +1,6 @@
 namespace Assets.Scripts.Asteroids
 {
-    public class SmallAsteroid : BaseAsteroid
+    public class SmallAsteroid : Asteroid
     {
     }
 }

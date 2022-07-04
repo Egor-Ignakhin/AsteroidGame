@@ -1,5 +1,3 @@
-using Assets.Scripts.Player.Ship.ShipStates;
-
 using System.Collections;
 using Assets.Scripts.Player.Ship.States;
 using UnityEngine;
@@ -9,24 +7,24 @@ namespace Assets.Scripts.Player.Ship
 {
     public class ShipAnimator : MonoBehaviour
     {
-        [SerializeField] private ShipController shipController;
+        [SerializeField] private Ship ship;
         [SerializeField] private Image imgRenderer;
 
         private void OnEnable()
         {
-            shipController.StateChanged += OnShipStateChanged;
+            ship.StateChanged += OnShipStateChanged;
         }
 
         private void OnShipStateChanged()
         {
             StopAllCoroutines();
 
-            if (shipController.GetState() is InvulnerabilityShipState)
+            if (ship.GetState() is InvulnerabilityShipState)
             {
                 StartCoroutine(nameof(InvulnerabilityIndicate));
-                shipController.transform.position = new Vector3(Screen.width / 2f, Screen.height / 2f);
+                ship.transform.position = new Vector3(Screen.width / 2f, Screen.height / 2f);
             }
-            else if (shipController.GetState() is MainShipState)
+            else if (ship.GetState() is MainShipState)
             {
                 imgRenderer.enabled = true;
             }
@@ -47,7 +45,7 @@ namespace Assets.Scripts.Player.Ship
 
         private void OnDisable()
         {
-            shipController.StateChanged -= OnShipStateChanged;
+            ship.StateChanged -= OnShipStateChanged;
         }
     }
 }

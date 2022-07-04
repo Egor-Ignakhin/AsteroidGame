@@ -1,13 +1,16 @@
+using System;
 using UnityEngine;
 
-namespace Assets.Scripts.UFO
+namespace Assets.Scripts.UFO.Movement
 {
     public class MainUfoMovement : IUfoMovement
     {
-        private Transform mTransform;
+        public event Action MovementIsOver;
+        private readonly Transform mTransform;
         private Vector3 targetPosition;
         private Vector3 startPosition;
         private float time;
+
 
         public MainUfoMovement(Transform mTransform)
         {
@@ -24,8 +27,18 @@ namespace Assets.Scripts.UFO
 
         public void Move()
         {
-            time += Time.deltaTime / 10f;
+            time += Time.fixedDeltaTime / 10f;
             mTransform.position = Vector3.Lerp(startPosition, targetPosition, time);
+
+            TakeStatistics();
+        }
+
+        private void TakeStatistics()
+        {
+            if (mTransform.position == targetPosition)
+            {
+                MovementIsOver?.Invoke();
+            }
         }
     }
 }

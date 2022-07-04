@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Asteroids
 {
-    public class AsteroidsPool<T> : ObjectPool<T> where T : BaseAsteroid
+    public class AsteroidsPool<T> : ObjectPool<T> where T : Asteroid
     {
         public AsteroidsPool(Transform objectsParent,
             int objectsCount, PlayerInput playerInput) : base(objectsParent, objectsCount)

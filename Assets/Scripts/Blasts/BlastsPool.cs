@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Blasts
 {
     public class BlastsPool : ObjectPool<Blast>
     {

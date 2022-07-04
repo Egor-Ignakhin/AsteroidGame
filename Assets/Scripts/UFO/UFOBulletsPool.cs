@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.UFO
 {
-    public class UFOBulletsPool : BulletsPool
+    public class UfoBulletsPool : BulletsPool
     {
-        public UFOBulletsPool(Transform objectsParent, 
+        public UfoBulletsPool(Transform objectsParent, 
             int objectsCount, PlayerInput playerInput) : base(objectsParent, objectsCount, playerInput)
         {
         }

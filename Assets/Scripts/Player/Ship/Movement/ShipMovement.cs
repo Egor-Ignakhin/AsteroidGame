@@ -1,9 +1,8 @@
-using System;
+using Assets.Scripts.Player.Ship.ShipInput;
 using UnityEngine;
 
 namespace Assets.Scripts.Player.Ship.Movement
 {
-    [Serializable]
     public abstract class ShipMovement
     {
         protected IShipInput shipInput;
@@ -12,7 +11,7 @@ namespace Assets.Scripts.Player.Ship.Movement
         protected Transform mTransform;
         [SerializeField] protected AudioSource audioSource;
 
-        public ShipMovement(Transform t, AudioSource audioSource)
+        protected ShipMovement(Transform t, AudioSource audioSource)
         {
             mTransform = t;
             this.audioSource = audioSource;
@@ -40,6 +39,6 @@ namespace Assets.Scripts.Player.Ship.Movement
 
         protected abstract void OnMouseMoved();
 
-        public abstract void LateUpdate();
+        public abstract void FixedUpdate();
     }
 }

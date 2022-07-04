@@ -1,9 +1,8 @@
-#if UNITY_EDITOR
-using UnityEditor;
 
-#endif
+using UnityEditor;
 using UnityEngine;
-namespace Asteroid.Editor
+
+namespace Assets.Scripts.Editor
 {
     public sealed class StdSceneFoldersCreator
     {

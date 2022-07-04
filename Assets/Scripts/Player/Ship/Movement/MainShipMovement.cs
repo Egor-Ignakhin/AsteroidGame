@@ -20,7 +20,7 @@ namespace Assets.Scripts.Player.Ship.Movement
 
         protected override void MovingKeysPressed()
         {
-            moveVelocity = mTransform.right * shipInput.GetMoveSign() * Time.deltaTime * 100;
+            moveVelocity = mTransform.right * shipInput.GetMoveSign() * 100;
             if (!audioSource.isPlaying)
             {
                 audioSource.Play();
@@ -29,32 +29,22 @@ namespace Assets.Scripts.Player.Ship.Movement
 
         protected override void RotationKeysPressed()
         {
-            rotateVelocity = mTransform.forward * shipInput.GetRotationSign() * Time.deltaTime * 100;
+            rotateVelocity = mTransform.forward * shipInput.GetRotationSign() * 100;
         }
 
         protected override void OnMouseMoved()
         {
-            Vector2 positionOnScreen = mTransform.position;
-
-            Vector2 mouseOnScreen = Input.mousePosition;
-
-            var direction = mouseOnScreen - positionOnScreen;
-
-            var _targetRotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
-
-            rotateVelocity = new Vector3(0f, 0f, _targetRotation);
+            var direction = Input.mousePosition - mTransform.position;
+            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            mTransform.rotation = Quaternion.Euler(0, 0, angle);
         }
 
-        float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
+       
+        public override void FixedUpdate()
         {
-            return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
-        }
+            mTransform.position += moveVelocity * movingSpeed * Time.fixedDeltaTime;
 
-        public override void LateUpdate()
-        {
-            mTransform.position += moveVelocity * movingSpeed;
-
-            mTransform.eulerAngles += rotateVelocity * rotationSpeed;
+            mTransform.eulerAngles += rotateVelocity * rotationSpeed * Time.fixedDeltaTime;
 
             moveVelocity *= movingInertia;
             rotateVelocity *= rotationInertia;

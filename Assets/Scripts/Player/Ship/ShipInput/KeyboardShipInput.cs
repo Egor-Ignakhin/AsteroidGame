@@ -1,8 +1,7 @@
 using System;
-
 using UnityEngine;
 
-namespace Assets.Scripts.Player.Ship
+namespace Assets.Scripts.Player.Ship.ShipInput
 {
     public class KeyboardShipInput : IShipInput
     {
@@ -63,11 +62,6 @@ namespace Assets.Scripts.Player.Ship
         protected void CallMouseMoved()
         {
             MouseMoved?.Invoke();
-        }
-
-        protected void CallRotationKeysPressed()
-        {
-            MovingKeysPressed?.Invoke();
         }
     }
 }
