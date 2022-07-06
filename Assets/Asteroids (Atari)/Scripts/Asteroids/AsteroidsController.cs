@@ -14,6 +14,7 @@ namespace Asteroids__Atari_.Scripts.Asteroids
         private ObjectPool<SmallAsteroid> smallAsteroidsPool;
 
         private int asteroidsWave;
+        [SerializeField]private AsteroidsStats asteroidsStats;
 
         private void Awake()
         {
@@ -56,7 +57,7 @@ namespace Asteroids__Atari_.Scripts.Asteroids
             var leftDir = asteroid.Direction();
             var rightDir = asteroid.Direction();
 
-            var angle = 45 * Mathf.Deg2Rad;
+            var angle = asteroidsStats.GetExpansionDegreeAfterDestroyAsteroid() * Mathf.Deg2Rad;
             leftDir.x = leftDir.x * Mathf.Cos(angle) + leftDir.y * Mathf.Sin(angle);
             leftDir.y = leftDir.y * Mathf.Cos(angle) - leftDir.x * Mathf.Sin(angle);
 
@@ -84,7 +85,7 @@ namespace Asteroids__Atari_.Scripts.Asteroids
                 smallAsteroidsPool.InUsing() == 0)
             {
                 asteroidsWave++;
-                StartCoroutine(ReCreateAsteroids(2));
+                StartCoroutine(ReCreateAsteroids(asteroidsStats.GetDelayBeforeRecreating()));
             }
         }
 

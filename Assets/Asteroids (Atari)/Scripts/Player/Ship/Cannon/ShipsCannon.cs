@@ -3,7 +3,7 @@ using Asteroids__Atari_.Scripts.Bullets;
 using Asteroids__Atari_.Scripts.Player.Ship.ShipInput;
 using UnityEngine;
 
-namespace Asteroids__Atari_.Scripts.Player.Ship
+namespace Asteroids__Atari_.Scripts.Player.Ship.Cannon
 {
     public class ShipsCannon : MonoBehaviour, IBulletShooter
     {
@@ -17,10 +17,13 @@ namespace Asteroids__Atari_.Scripts.Player.Ship
         [SerializeField] private Transform bulletInstantiatePlace;
         [SerializeField] private AudioSource fireAudioSource;
         [SerializeField] private PlayerInput playerInput;
+        [SerializeField] private ShipsCannonStats cannonStats;
+        private static int maxShootsPerSecond;
 
         private void Awake()
         {
             bulletsPool = new BulletsPool(bulletsParent, 15, playerInput);
+            maxShootsPerSecond = cannonStats.GetMaxShootsPerSecond();
         }
 
         public void SetShipInput(IShipInput ishipInput)
@@ -57,6 +60,11 @@ namespace Asteroids__Atari_.Scripts.Player.Ship
             {
                 BulletHit?.Invoke(bulletReceiver);
             }
+        }
+
+        public static int GetMaxShootsPerSecond()
+        {
+            return maxShootsPerSecond;
         }
     }
 }

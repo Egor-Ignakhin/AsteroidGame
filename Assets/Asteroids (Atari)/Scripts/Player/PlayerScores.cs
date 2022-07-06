@@ -2,6 +2,7 @@ using System;
 using Asteroids__Atari_.Scripts.Balance;
 using Asteroids__Atari_.Scripts.Bullets;
 using Asteroids__Atari_.Scripts.Player.Ship;
+using Asteroids__Atari_.Scripts.Player.Ship.Cannon;
 using UnityEngine;
 
 namespace Asteroids__Atari_.Scripts.Player

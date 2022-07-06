@@ -1,4 +1,5 @@
 using System;
+using Asteroids__Atari_.Scripts.Player.Ship.Cannon;
 using UnityEngine;
 
 namespace Asteroids__Atari_.Scripts.Player.Ship.ShipInput
@@ -37,7 +38,7 @@ namespace Asteroids__Atari_.Scripts.Player.Ship.ShipInput
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (timeFromLastShot > 1f / 3)
+                if (timeFromLastShot > 1f / ShipsCannon.GetMaxShootsPerSecond())
                 {
                     ShootKeyDown?.Invoke();
                     timeFromLastShot = 0;

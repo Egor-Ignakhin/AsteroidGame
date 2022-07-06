@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Asteroids__Atari_.Scripts.Blasts;
+using Asteroids__Atari_.Scripts.Player.Ship.Cannon;
 using Asteroids__Atari_.Scripts.Player.Ship.Movement;
 using Asteroids__Atari_.Scripts.Player.Ship.ShipInput;
 using Asteroids__Atari_.Scripts.Player.Ship.States;
